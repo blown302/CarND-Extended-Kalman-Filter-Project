@@ -44,6 +44,11 @@ private:
   Eigen::MatrixXd R_radar_;
   Eigen::MatrixXd H_laser_;
   Eigen::MatrixXd Hj_;
+
+  //set the acceleration noise components
+	const int noise_ax = 9;
+	const int noise_ay = 9;
+  Eigen::MatrixXd CalculateJacobian(const Eigen::VectorXd& x_state);
 };
 
 #endif /* FusionEKF_H_ */
