@@ -36,6 +36,7 @@ FusionEKF::FusionEKF() {
 
   //create a 4D state vector, we don't know yet the values of the x state
   ekf_.x_ = VectorXd(4);
+  ekf_.x_ << 1, 1, 1, 1; // important for RMSE values at the beginning of the run.
 	
   //state covariance matrix P
   ekf_.P_ = MatrixXd(4, 4);
@@ -43,11 +44,6 @@ FusionEKF::FusionEKF() {
 			  0, 1, 0, 0,
 			  0, 0, 1000, 0,
 			  0, 0, 0, 1000;
-
-  //measurement covariance
-  ekf_.R_ = MatrixXd(2, 2);
-	ekf_.R_ << 0.0225, 0,
-			  0, 0.0225;
 
   //measurement matrix
   ekf_.H_ = MatrixXd(2, 4);
@@ -94,7 +90,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       float ro = measurement_pack.raw_measurements_[0];
       float theta = measurement_pack.raw_measurements_[1];
 
-      ekf_.x_ << ro * cos(theta), ro * sin(theta);
+      ekf_.x_ << ro * cos(theta), ro * sin(theta), 0, 0;
     }
     else if (measurement_pack.sensor_type_ == MeasurementPackage::LASER) {
       //set the state with the initial location and zero velocity

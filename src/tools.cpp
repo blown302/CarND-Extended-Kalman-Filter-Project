@@ -5,6 +5,7 @@ using Eigen::VectorXd;
 using Eigen::MatrixXd;
 using std::vector;
 
+
 Tools::Tools() {}
 
 Tools::~Tools() {}
@@ -68,4 +69,28 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
 		  py*(vx*py - vy*px)/c3, px*(px*vy - py*vx)/c3, px/c2, py/c2;
 
 	return Hj;
+}
+
+VectorXd Tools::ConvertToPolar(VectorXd& x) {
+  float px = x(0);
+  float py = x(1);
+  float vx = x(2);
+  float vy = x(3);
+
+  float ro = sqrt(pow(px, 2) + pow(py, 2));
+  VectorXd result = VectorXd(3);
+  result << ro, atan2(py, px), (px*vx+py*vy)/ro;
+  return result;
+}
+
+void Tools::NormalizePolar(VectorXd& polar) {
+	float theata = polar(1); 
+	while (abs(theata) > M_PI) {
+		if (theata > M_PI) {
+			theata -= TWO_PI;
+		} else {
+			theata += TWO_PI;
+		}
+	}
+	polar(1) = theata;
 }
